@@ -1,0 +1,382 @@
+:root {
+  --bg: #050805;
+  --grid: #0b2f0b;
+
+  /* облака */
+  --clouds-img: url("assets/cloud.png");
+  --clouds-width: 240%;
+  --clouds-height: 48.6%;
+  --clouds-opacity: 0.5;
+  --clouds-speed-s: 320;
+  --clouds-repeat: repeat-x;
+
+  /* звёзды */
+  --stars-img: url("assets/stars.png");
+  --stars-width: 240%;
+  --stars-height: var(--clouds-height);
+  --stars-opacity: 0.55;
+  --stars-repeat: repeat;
+
+  /* 🌊 Ocean */
+  --ocean-width: 100%;     /* ширина */
+  --ocean-height: 480px;   /* высота */
+  --ocean-left: 0%;        /* позиция X */
+  --ocean-bottom: 0%;      /* позиция Y */
+  --ocean-opacity: 0.4;   /* прозрачность */
+  --ocean-z: 20;           /* z-index */
+
+  /* LUNA */
+  --luna-img: url("assets/luna.png");
+  --luna-size: 100px;
+  --luna-left: 24%;
+  --luna-top: 8%;
+  --luna-opacity: 0.95;
+  --luna-float-s: 8;
+  --luna-rotate-deg: 6deg;
+  --luna-z: 16;
+
+  /* панель результатов */
+  --results-left: 24px;
+  --results-bottom: 31px;
+  --results-width: 90px;
+  --results-max-height: 150px;
+  --results-padding: 6px;
+  --results-font-size: 12px;
+
+  /* кнопка языка */
+  --lang-right: 28px;
+  --lang-top: 8px;
+  --lang-size: 30px;
+  --lang-icon-size: 18px;
+  --lang-bg: rgba(0,0,0,0.42);
+  --lang-color: #07ff6a;
+  --lang-border-radius: 10px;
+  --lang-padding: 0px 8px;
+
+  /* авианосец */
+  --carrier-w: 420px;
+  --carrier-left: 50%;
+  --carrier-top: 55%;
+
+  /* самолёт */
+  --plane-w: 100px;
+  --plane-start-x: 260px;
+  --plane-start-y: 600px;
+
+  /* логотип */
+  --logo-w: 160px;
+  --logo-top: 425px;
+
+  /* кнопка старт */
+  --btn-left: 50%;
+  --btn-top: 684px;
+}
+
+/* глобально */
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Courier New", monospace;
+  color: #07ff6a;
+}
+
+/* телефон / экран */
+.phone {
+  aspect-ratio: 9 / 16;
+  height: 860px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* зелёная сетка */
+.phone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  background:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0/26px 26px,
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px) 0 0/26px 26px;
+}
+
+/* слой звёзд */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--stars-height);
+  background-image: var(--stars-img);
+  background-repeat: var(--stars-repeat);
+  background-size: var(--stars-width) auto;
+  opacity: var(--stars-opacity);
+  z-index: 10;
+  pointer-events: none;
+  transform: translateZ(0);
+  animation: starsDrift 160s linear infinite;
+}
+@keyframes starsDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: -2000px 0; }
+}
+
+/* облака */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--clouds-height);
+  background-image: var(--clouds-img);
+  background-repeat: var(--clouds-repeat);
+  background-size: var(--clouds-width) auto;
+  opacity: var(--clouds-opacity);
+  animation: moveClouds linear infinite;
+  animation-duration: calc(var(--clouds-speed-s) * 1s);
+  z-index: 12;
+  pointer-events: none;
+}
+.clouds::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px) 0 0/8px 8px,
+    radial-gradient(rgba(7,255,106,0.01), rgba(7,255,106,0));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 13;
+}
+@keyframes moveClouds {
+  0% { background-position: 0 0; }
+  100% { background-position: -2000px 0; }
+}
+
+/* 🌙 Луна */
+.moon {
+  position: absolute;
+  left: var(--luna-left);
+  top: var(--luna-top);
+  width: var(--luna-size);
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  background-image: var(--luna-img);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: var(--luna-opacity);
+  z-index: var(--luna-z);
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(7,255,106,0.06));
+  animation: lunaFloat calc(var(--luna-float-s) * 1s) ease-in-out infinite;
+}
+@keyframes lunaFloat {
+  0%   { transform: translate(-50%,-50%) translateY(0) rotate(0); }
+  50%  { transform: translate(-50%,-50%) translateY(-8px) rotate(var(--luna-rotate-deg)); }
+  100% { transform: translate(-50%,-50%) translateY(0) rotate(0); }
+}
+
+/* 🌊 Ocean (PNG картинка) */
+.ocean {
+  position: absolute;
+  left: var(--ocean-left);
+  bottom: var(--ocean-bottom);
+  width: var(--ocean-width);
+  height: var(--ocean-height);
+  opacity: var(--ocean-opacity);
+  z-index: var(--ocean-z);
+  pointer-events: none;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 6px rgba(7, 255, 110, 0.4));
+}
+
+/* carrier / plane / logo */
+.logo {
+  position: absolute;
+  top: var(--logo-top);
+  left: 35%;
+  transform: translateX(-50%);
+  width: var(--logo-w);
+  filter: drop-shadow(0 0 6px #06c251);
+  z-index: 40;
+}
+.carrier {
+  position: absolute;
+  left: var(--carrier-left);
+  top: var(--carrier-top);
+  transform: translateX(-50%);
+  width: var(--carrier-w);
+  filter: drop-shadow(0 0 8px #078f3e);
+  z-index: 30;
+}
+.plane {
+  position: absolute;
+  left: var(--plane-start-x);
+  top: var(--plane-start-y);
+  transform: translate(-50%, -50%);
+  width: var(--plane-w);
+  filter: drop-shadow(0 0 6px #07ff6a);
+  z-index: 35;
+}
+
+/* взлёт */
+.plane.takeoff {
+  animation: planeTakeoff 1200ms cubic-bezier(.2,.9,.3,1) forwards;
+}
+@keyframes planeTakeoff {
+  0%   { transform: translate(-50%,-50%) translateY(0) rotate(0); opacity: 1; }
+  60%  { transform: translate(-50%,-50%) translateY(-240px) rotate(-6deg) scale(0.98); }
+  100% { transform: translate(-50%,-50%) translateY(-900px) rotate(-12deg) scale(0.88); opacity: 0; }
+}
+
+/* кнопка старт */
+.start-btn {
+  position: absolute;
+  left: var(--btn-left);
+  top: var(--btn-top);
+  transform: translateX(-50%);
+  padding: 14px 30px;
+  border: 2px solid #07ff6a;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #07ff6a;
+  cursor: pointer;
+  text-shadow: 0 0 6px #11cf5d;
+  box-shadow: 0 0 12px rgba(7,255,106,0.08);
+  z-index: 50;
+}
+.start-btn:hover {
+  transform: translateX(-50%) scale(1.03);
+}
+
+/* взрыв */
+.explosion {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  border: 2px solid #07ff6a;
+  box-shadow: 0 0 15px #07ff6a, inset 0 0 10px #07ff6a;
+  z-index: 45;
+}
+.explosion.active {
+  animation: retroBoom 1s ease-out forwards;
+}
+@keyframes retroBoom {
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  40%  { transform: translate(-50%, -50%) scale(1.2); opacity: 0.95; }
+  70%  { transform: translate(-50%, -50%) scale(1.6); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* хакер панель */
+.hacker-overlay {
+  position: absolute;
+  right: var(--lang-right);
+  top: calc(var(--lang-top) + var(--lang-size) + 8px);
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 220;
+  transition: opacity 180ms ease;
+}
+.hacker-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.hacker-panel {
+  width: 200px;
+  max-height: 200px;
+  padding: 8px;
+  border: 1px solid rgba(7,255,106,0.28);
+  background: rgba(0,0,0,0.55);
+  color: #07ff6a;
+  font-size: 12px;
+  overflow: auto;
+}
+.panel-title { font-weight: 700; margin-bottom: 6px; color: #bdfdb7; }
+.hack-log { margin: 0; white-space: pre-wrap; line-height: 1.2; font-size: 11px; }
+
+/* результаты */
+.results-box {
+  position: absolute;
+  left: var(--results-left);
+  bottom: var(--results-bottom);
+  width: var(--results-width);
+  max-height: var(--results-max-height);
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(7,255,106,0.3);
+  border-radius: 6px;
+  padding: var(--results-padding);
+  font-size: var(--results-font-size);
+  overflow-y: auto;
+  z-index: 150;
+}
+.results-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: #bdfdb7; }
+.results-list div { padding: 2px 0; }
+
+/* кнопка языка */
+/* кнопка языка */
+.settings-btn {
+  box-sizing: border-box;
+  position: absolute;
+  right: var(--lang-right);
+  top: var(--lang-top);
+  background: var(--lang-bg);
+  border: 1px solid rgba(7,255,106,0.18);
+  color: var(--lang-color);
+  font-size: var(--lang-size);
+  line-height: 1;
+  cursor: pointer;
+  z-index: 9999; /* 🔥 поднял поверх всего */
+  border-radius: var(--lang-border-radius);
+  padding: var(--lang-padding);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-btn::before {
+  content: "⚙️";
+}
+/* меню языков */
+.lang-menu {
+  position: absolute;
+  right: var(--lang-right);
+  top: calc(var(--lang-top) + var(--lang-size) + 8px);
+  display: flex;
+  gap: 6px;
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(7,255,106,0.2);
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 210;
+}
+.lang-menu[hidden] { display: none; }
+.lang-menu button {
+  background: transparent;
+  color: #07ff6a;
+  border: 1px solid rgba(7,255,106,0.25);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: "Courier New", monospace;
+  cursor: pointer;
+}
+.lang-menu button:hover { box-shadow: 0 0 8px rgba(7,255,106,0.25); }
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
